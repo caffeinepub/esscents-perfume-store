@@ -1,0 +1,150 @@
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/assets/fonts/PlayfairDisplay-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "General Sans";
+  src: url("/assets/fonts/GeneralSans-Variable.woff2") format("woff2");
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark luxury amber/gold perfume theme */
+    --background: 13 0.018 55;
+    --foreground: 93 0.025 75;
+    --card: 17 0.022 52;
+    --card-foreground: 93 0.025 75;
+    --popover: 17 0.022 52;
+    --popover-foreground: 93 0.025 75;
+    --primary: 74 0.16 65;
+    --primary-foreground: 12 0.018 55;
+    --secondary: 24 0.04 52;
+    --secondary-foreground: 88 0.025 72;
+    --muted: 22 0.03 53;
+    --muted-foreground: 62 0.055 68;
+    --accent: 82 0.15 72;
+    --accent-foreground: 12 0.018 55;
+    --destructive: 55 0.2 25;
+    --destructive-foreground: 93 0.025 75;
+    --border: 28 0.045 55;
+    --input: 22 0.03 53;
+    --ring: 74 0.16 65;
+    --radius: 0.375rem;
+
+    --chart-1: 74 0.16 65;
+    --chart-2: 68 0.14 72;
+    --chart-3: 55 0.12 60;
+    --chart-4: 82 0.15 72;
+    --chart-5: 48 0.1 58;
+
+    --sidebar: 15 0.02 53;
+    --sidebar-foreground: 93 0.025 75;
+    --sidebar-primary: 74 0.16 65;
+    --sidebar-primary-foreground: 12 0.018 55;
+    --sidebar-accent: 22 0.03 53;
+    --sidebar-accent-foreground: 88 0.025 72;
+    --sidebar-border: 28 0.045 55;
+    --sidebar-ring: 74 0.16 65;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .gold-shimmer {
+    background: linear-gradient(
+      135deg,
+      oklch(74 0.16 65) 0%,
+      oklch(82 0.15 72) 40%,
+      oklch(74 0.16 65) 60%,
+      oklch(65 0.13 60) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .card-luxury {
+    @apply bg-card border border-border rounded-lg overflow-hidden;
+    box-shadow: 0 4px 24px oklch(0 0 0 / 0.4), inset 0 1px 0
+      oklch(74 0.16 65 / 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card-luxury:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px oklch(0 0 0 / 0.55), 0 0 0 1px
+      oklch(74 0.16 65 / 0.25), inset 0 1px 0 oklch(74 0.16 65 / 0.12);
+  }
+
+  .btn-gold {
+    @apply bg-primary text-primary-foreground font-medium;
+    box-shadow: 0 2px 12px oklch(74 0.16 65 / 0.35);
+    transition: all 0.2s ease;
+  }
+
+  .btn-gold:hover {
+    box-shadow: 0 4px 20px oklch(74 0.16 65 / 0.55);
+    transform: translateY(-1px);
+  }
+
+  .section-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(74 0.16 65),
+      transparent
+    );
+  }
+
+  .noise-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+}
