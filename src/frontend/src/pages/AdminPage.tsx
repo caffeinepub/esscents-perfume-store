@@ -190,7 +190,7 @@ export default function AdminPage() {
 
   const handleEnableAdmin = async () => {
     if (!identity || !actor) {
-      toast.error("Please login first");
+      login();
       return;
     }
     if (!adminToken.trim()) {
@@ -212,6 +212,8 @@ export default function AdminPage() {
   const isSaving =
     createProduct.isPending || updateProduct.isPending || uploading;
 
+  const isLoggingIn = loginStatus === "logging-in";
+
   // --- Not authenticated ---
   if (!isAuthenticated) {
     return (
@@ -231,16 +233,12 @@ export default function AdminPage() {
           </p>
           <Button
             onClick={login}
-            disabled={loginStatus === "logging-in"}
+            disabled={isLoggingIn}
             className="btn-gold px-10 py-5 rounded-full text-sm tracking-widest uppercase w-full"
             data-ocid="admin.login.primary_button"
           >
-            {loginStatus === "logging-in" && (
-              <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-            )}
-            {loginStatus === "logging-in"
-              ? "Connecting..."
-              : "Connect Identity"}
+            {isLoggingIn && <Loader2 className="mr-2 w-4 h-4 animate-spin" />}
+            {isLoggingIn ? "Connecting..." : "Connect Identity"}
           </Button>
         </motion.div>
       </div>
@@ -282,30 +280,44 @@ export default function AdminPage() {
             {identity.getPrincipal().toString()}
           </div>
 
-          {/* Session expired warning + re-login */}
-          {sessionExpired && (
-            <div className="space-y-3 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-left">
+          {/* Always show reconnect/login button */}
+          <div
+            className={`space-y-3 p-4 rounded-xl text-left ${
+              sessionExpired
+                ? "bg-amber-500/10 border border-amber-500/30"
+                : "bg-muted/20 border border-border/40"
+            }`}
+          >
+            {sessionExpired && (
               <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">
                 Your session may have expired. Please reconnect your identity
                 before enabling admin.
               </p>
-              <Button
-                onClick={login}
-                disabled={loginStatus === "logging-in"}
-                className="btn-gold px-6 py-4 rounded-full text-xs tracking-widest uppercase w-full"
-                data-ocid="admin.relogin.primary_button"
-              >
-                {loginStatus === "logging-in" ? (
-                  <>
-                    <Loader2 className="mr-2 w-3.5 h-3.5 animate-spin" />{" "}
-                    Connecting...
-                  </>
-                ) : (
-                  "Reconnect Identity"
-                )}
-              </Button>
-            </div>
-          )}
+            )}
+            {!sessionExpired && (
+              <p className="text-xs text-muted-foreground">
+                Already connected. You can reconnect if you need to switch
+                identity.
+              </p>
+            )}
+            <Button
+              onClick={login}
+              disabled={isLoggingIn}
+              className="btn-gold px-6 py-4 rounded-full text-xs tracking-widest uppercase w-full"
+              data-ocid="admin.relogin.primary_button"
+            >
+              {isLoggingIn ? (
+                <>
+                  <Loader2 className="mr-2 w-3.5 h-3.5 animate-spin" />{" "}
+                  Connecting...
+                </>
+              ) : sessionExpired ? (
+                "Reconnect Identity"
+              ) : (
+                "Switch Identity"
+              )}
+            </Button>
+          </div>
 
           <div className="space-y-2 text-left">
             <Label
@@ -326,7 +338,7 @@ export default function AdminPage() {
           </div>
           <Button
             onClick={handleEnableAdmin}
-            disabled={enablingAdmin || !actor}
+            disabled={enablingAdmin}
             className="btn-gold px-10 py-5 rounded-full text-sm tracking-widest uppercase w-full"
             data-ocid="admin.enable_admin.primary_button"
           >
